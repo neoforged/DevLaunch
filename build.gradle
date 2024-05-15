@@ -1,13 +1,17 @@
 plugins {
     id 'java'
     id 'maven-publish'
+    id "net.neoforged.gradleutils" version "3.0.0-alpha.13"
 }
 
 group = 'net.neoforged'
-version = '1.0-SNAPSHOT'
+gradleutils.version {
+    branches.suffixBranch()
+}
+version = gradleutils.version
 
-repositories {
-    mavenCentral()
+changelog {
+    from "1.0"
 }
 
 java {
@@ -27,20 +31,14 @@ jar {
     }
 }
 
-dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params'
-}
-
-test {
-    useJUnitPlatform()
-}
-
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
         }
+    }
+
+    repositories {
+        maven gradleutils.publishingMaven
     }
 }
