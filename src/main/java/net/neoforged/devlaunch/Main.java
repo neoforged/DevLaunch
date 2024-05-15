@@ -43,22 +43,19 @@ public class Main {
             throw new IllegalArgumentException("DevLaunch requires at least one argument: the main class.");
         }
 
-        String mainClass = newArgs.get(1);
-        newArgs.remove(1);
-
         Method mainMethod;
         try {
-            mainMethod = Class.forName(mainClass).getMethod("main", String[].class);
+            mainMethod = Class.forName(newArgs.get(0)).getMethod("main", String[].class);
         } catch (ReflectiveOperationException e) {
-            throw new IllegalArgumentException("Could not find main class or main method. Given main class: " + mainClass, e);
+            throw new IllegalArgumentException("Could not find main class or main method. Given main class: " + newArgs.get(0), e);
         }
 
         try {
-            mainMethod.invoke(null, (Object) newArgs.toArray(String[]::new));
+            mainMethod.invoke(null, (Object) newArgs.subList(1, newArgs.size()).toArray(String[]::new));
         } catch (InvocationTargetException e) {
             throw e.getTargetException();
         } catch (ReflectiveOperationException e) {
-            throw new IllegalArgumentException("Could not invoke main class: " + mainClass, e);
+            throw new IllegalArgumentException("Could not invoke main class: " + newArgs.get(0), e);
         }
     }
 
