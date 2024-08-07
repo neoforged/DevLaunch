@@ -30,6 +30,8 @@ import java.util.Set;
 
 public class Main {
     public static void main(String[] args) throws Throwable {
+        RenderDocIntegration.init();
+
         if (args.length == 0) {
             throw new IllegalArgumentException("DevLaunch requires at least one argument: an @-file to expand, or the main class.");
         }
@@ -46,13 +48,13 @@ public class Main {
 
         Method mainMethod;
         try {
-            mainMethod = Class.forName(newArgs.get(0)).getMethod("main", String[].class);
+            mainMethod = Class.forName(newArgs.remove(0)).getMethod("main", String[].class);
         } catch (ReflectiveOperationException e) {
             throw new IllegalArgumentException("Could not find main class or main method. Given main class: " + newArgs.get(0), e);
         }
 
         try {
-            mainMethod.invoke(null, (Object) newArgs.subList(1, newArgs.size()).toArray(String[]::new));
+            mainMethod.invoke(null, (Object) newArgs.toArray(String[]::new));
         } catch (InvocationTargetException e) {
             throw e.getTargetException();
         } catch (ReflectiveOperationException e) {
