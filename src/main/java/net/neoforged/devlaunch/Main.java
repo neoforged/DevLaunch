@@ -19,6 +19,7 @@ package net.neoforged.devlaunch;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.Reader;
 import java.io.StreamTokenizer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -83,7 +84,7 @@ public class Main {
 
     private static void expandValidArgumentFile(String fileName, File file, List<String> arguments, Set<String> visited) {
         List<String> result = new ArrayList<>();
-        try (var reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
+        try (Reader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             visited.add(file.getAbsolutePath());
             StreamTokenizer tok = new StreamTokenizer(reader);
             tok.resetSyntax();
